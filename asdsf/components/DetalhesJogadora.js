@@ -1,67 +1,77 @@
-import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
  
-export default function Desenvolvedoras() {
-  const desenvolvedoras = [
-    {
-      id: 1,
-      nome: "Anna Clara Estanislau Bueno",
-      idade: 17,
-      iniciais: "AC",
-    },
-    {
-      id: 2,
-      nome: "Hadassa Oshima Batista",
-      idade: 17,
-      iniciais: "HO",
-    },
-  ];
+// Mapa de imagens locais
+const imagensJogadoras = {
+  'jogadora1.jpg': require('../assets/jogadorasImagens/jogadora1.jpeg'),
+  'jogadora2.jpg': require('../assets/jogadorasImagens/jogadora2.jpeg'),
+  'jogadora3.jpg': require('../assets/jogadorasImagens/jogadora3.jpeg'),
+  'jogadora4.jpg': require('../assets/jogadorasImagens/jogadora4.jpeg'),
+  'jogadora5.jpg': require('../assets/jogadorasImagens/jogadora5.jpeg'),
+  'jogadora6.jpg': require('../assets/jogadorasImagens/jogadora6.jpeg'),
+  'jogadora7.jpg': require('../assets/jogadorasImagens/jogadora7.jpeg'),
+  'jogadora8.jpg': require('../assets/jogadorasImagens/jogadora8.jpeg'),
+};
+ 
+export default function DetalhesJogadora({ route }) {
+  const { jogadora } = route.params;
+  const imagem = imagensJogadoras[jogadora.imagem] || imagensJogadoras['jogadora1.jpg'];
  
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
- 
+      
+      {/* Cabeçalho com foto */}
       <View style={styles.header}>
-        <Text style={styles.headerSub}>EQUIPE</Text>
-        <Text style={styles.titulo}>Desenvolvedoras</Text>
-        <View style={styles.divisor} />
-      </View>
- 
-      {desenvolvedoras.map((dev) => (
-        <View key={dev.id} style={styles.card}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarTexto}>{dev.iniciais}</Text>
-          </View>
-          <View style={styles.cardInfo}>
-            <Text style={styles.nome}>{dev.nome}</Text>
-            <Text style={styles.idade}>{dev.idade} anos</Text>
-          </View>
+        <Image source={imagem} style={styles.foto} />
+        <View style={styles.badgeNumero}>
+          <Text style={styles.badgeNumeroTexto}>#{jogadora.numero}</Text>
         </View>
-      ))}
- 
-      <View style={styles.sobreCard}>
-        <Text style={styles.sobreIcone}>💻</Text>
-        <Text style={styles.sobreTitulo}>Sobre o Projeto</Text>
-        <Text style={styles.sobreTexto}>
-          Projeto desenvolvido em React Native com o intuito de apresentar
-          informações sobre jogadoras de rugby feminino das Black Ferns.
-        </Text>
+        <Text style={styles.nome}>{jogadora.nome}</Text>
+        <Text style={styles.posicao}>{jogadora.posicao}</Text>
+        <View style={styles.equipeTag}>
+          <Text style={styles.equipeTexto}>{jogadora.equipe}</Text>
+        </View>
       </View>
  
-      <View style={styles.techCard}>
-        <Text style={styles.techTitulo}>TECNOLOGIAS</Text>
-        <View style={styles.techGrid}>
-          <View style={styles.techBadge}>
-            <Text style={styles.techTexto}>React Native</Text>
-          </View>
-          <View style={styles.techBadge}>
-            <Text style={styles.techTexto}>JavaScript</Text>
-          </View>
-          <View style={styles.techBadge}>
-            <Text style={styles.techTexto}>Expo</Text>
-          </View>
+      {/* Informações pessoais */}
+      <View style={styles.secao}>
+        <Text style={styles.secaoTitulo}>INFORMAÇÕES PESSOAIS</Text>
+        <View style={styles.card}>
+          <InfoRow label="Idade" valor={`${jogadora.idade} anos`} />
+          <InfoRow label="Nacionalidade" valor={jogadora.nacionalidade} />
+        </View>
+      </View>
+ 
+      {/* Condição física */}
+      <View style={styles.secao}>
+        <Text style={styles.secaoTitulo}>CONDIÇÃO FÍSICA</Text>
+        <View style={styles.gridFisico}>
+          <StatBox label="Altura" valor={jogadora.condicaoFisica.altura} icone="📏" />
+          <StatBox label="Peso" valor={jogadora.condicaoFisica.peso} icone="⚖️" />
+          <StatBox label="Vel. 40m" valor={jogadora.condicaoFisica.velocidade40m} icone="⚡" />
+          <StatBox label="Cooper" valor={jogadora.condicaoFisica.resistenciaCooper} icone="🏃" />
         </View>
       </View>
  
     </ScrollView>
+  );
+}
+ 
+function InfoRow({ label, valor }) {
+  return (
+    <View style={styles.infoRow}>
+      <Text style={styles.infoLabel}>{label}</Text>
+      <Text style={styles.infoValor}>{valor}</Text>
+    </View>
+  );
+}
+ 
+function StatBox({ label, valor, icone }) {
+  return (
+    <View style={styles.statBox}>
+      <Text style={styles.statIcone}>{icone}</Text>
+      <Text style={styles.statValor}>{valor}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
+    </View>
   );
 }
  
@@ -71,138 +81,133 @@ const styles = StyleSheet.create({
     backgroundColor: '#0f0020',
   },
   content: {
-    padding: 20,
     paddingBottom: 50,
   },
- 
-  // Header
   header: {
     alignItems: 'center',
-    marginBottom: 28,
-    marginTop: 10,
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    backgroundColor: '#1a0035',
+    borderBottomWidth: 1,
+    borderBottomColor: '#2d0060',
+    position: 'relative',
   },
-  headerSub: {
-    fontSize: 11,
-    letterSpacing: 6,
-    color: '#c084fc',
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  titulo: {
-    fontSize: 34,
-    fontWeight: '900',
-    color: '#f5f0ff',
-    letterSpacing: 1,
-  },
-  divisor: {
-    width: 50,
-    height: 3,
-    backgroundColor: '#a855f7',
-    borderRadius: 2,
-    marginTop: 10,
-  },
- 
-  // Card da desenvolvedora
-  card: {
-    backgroundColor: '#1e0040',
-    borderRadius: 14,
-    marginBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#3b0764',
-  },
-  avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: '#4c1d95',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 14,
-    borderWidth: 2,
+  foto: {
+    width: 130,
+    height: 130,
+    borderRadius: 65,
+    borderWidth: 3,
     borderColor: '#7c3aed',
+    marginBottom: 16,
   },
-  avatarTexto: {
-    color: '#e9d5ff',
+  badgeNumero: {
+    position: 'absolute',
+    top: 120,
+    right: '30%',
+    backgroundColor: '#7c3aed',
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderWidth: 2,
+    borderColor: '#0f0020',
+  },
+  badgeNumeroTexto: {
+    color: '#fff',
     fontWeight: '800',
-    fontSize: 16,
-    letterSpacing: 1,
-  },
-  cardInfo: {
-    flex: 1,
+    fontSize: 12,
   },
   nome: {
+    fontSize: 26,
+    fontWeight: '900',
     color: '#f5f0ff',
-    fontSize: 16,
-    fontWeight: '700',
+    textAlign: 'center',
     marginBottom: 4,
   },
-  idade: {
-    color: '#c084fc',
-    fontSize: 13,
-    fontWeight: '600',
-  },
- 
-  // Card sobre o projeto
-  sobreCard: {
-    backgroundColor: '#1e0040',
-    borderRadius: 16,
-    padding: 20,
-    marginTop: 8,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#3b0764',
-  },
-  sobreIcone: {
-    fontSize: 28,
-    marginBottom: 10,
-  },
-  sobreTitulo: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#e9d5ff',
-    marginBottom: 10,
-    letterSpacing: 0.5,
-  },
-  sobreTexto: {
+  posicao: {
     fontSize: 14,
-    color: '#c4b5fd',
-    lineHeight: 22,
+    color: '#c084fc',
+    fontWeight: '600',
+    letterSpacing: 1,
+    marginBottom: 12,
   },
- 
-  // Card de tecnologias
-  techCard: {
-    backgroundColor: '#2d0060',
-    borderRadius: 14,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: '#4c1d95',
+  equipeTag: {
+    backgroundColor: '#3b0764',
+    paddingHorizontal: 16,
+    paddingVertical: 5,
+    borderRadius: 20,
   },
-  techTitulo: {
+  equipeTexto: {
+    color: '#e9d5ff',
+    fontWeight: '700',
+    fontSize: 13,
+    letterSpacing: 1,
+  },
+  secao: {
+    paddingHorizontal: 20,
+    marginTop: 24,
+  },
+  secaoTitulo: {
     fontSize: 11,
     fontWeight: '700',
     color: '#7c3aed',
     letterSpacing: 3,
-    marginBottom: 12,
+    marginBottom: 10,
   },
-  techGrid: {
+  card: {
+    backgroundColor: '#1e0040',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#3b0764',
+    overflow: 'hidden',
+  },
+  infoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2d0060',
+  },
+  infoLabel: {
+    color: '#a78bfa',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  infoValor: {
+    color: '#f5f0ff',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  gridFisico: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 10,
   },
-  techBadge: {
-    backgroundColor: '#3b0764',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
+  statBox: {
+    backgroundColor: '#1e0040',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: '#7c3aed',
+    borderColor: '#3b0764',
+    padding: 16,
+    alignItems: 'center',
+    width: '47%',
   },
-  techTexto: {
-    color: '#e9d5ff',
-    fontWeight: '700',
-    fontSize: 13,
+  statIcone: {
+    fontSize: 22,
+    marginBottom: 6,
+  },
+  statValor: {
+    color: '#f5f0ff',
+    fontSize: 18,
+    fontWeight: '900',
+    marginBottom: 4,
+  },
+  statLabel: {
+    color: '#a78bfa',
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 1,
+    textTransform: 'uppercase',
   },
 });
